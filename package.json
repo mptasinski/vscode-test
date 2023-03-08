@@ -3,6 +3,7 @@
   "displayName": "test-extension",
   "description": "",
   "version": "0.0.1",
+  "publisher": "Macko",
   "engines": {
     "vscode": "^1.76.0"
   },
