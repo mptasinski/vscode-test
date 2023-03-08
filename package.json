@@ -1,6 +1,6 @@
 {
-  "name": "test-extension",
-  "displayName": "test-extension",
+  "name": "mynameisRajesh",
+  "displayName": "mynameisRajesh",
   "description": "",
   "version": "0.0.1",
   "publisher": "Macko",
@@ -15,7 +15,7 @@
   "contributes": {
     "commands": [
       {
-        "command": "test-extension.helloWorld",
+        "command": "mynameisRajesh.helloWorld",
         "title": "Hello World"
       }
     ]
