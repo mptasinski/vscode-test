@@ -11,13 +11,17 @@ on:
 jobs:
   release:
     name: create release
-    if: |
-      !startsWith(github.ref_name , 'release v') && github.event.pull_request.merged == true
+    if: ${{ !startsWith(github.head_ref , 'release-v') && github.event.pull_request.merged == true }}
     runs-on: ubuntu-latest
 
     steps:
       - name: debug
-        run: echo release
+        run: |
+          echo ${{ github.ref_name }} 
+          echo ${{ github.head_ref }} 
+          echo ${{ github.event.pull_request.merged }} 
+          echo ${{ startsWith(github.head_ref , 'release v') }}
+          echo ${{ (github.event.pull_request.merged == true) }}
 
       # - name: Clone repository
       #   uses: actions/checkout@v3
