@@ -2,7 +2,7 @@
 
 Testing VSCode publish v0.0.6
 
-## Releasing
+## Releasinggggg
 
 1. create branch from master with your changes
 1. validate and then merge changes to master
