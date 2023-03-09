@@ -1,6 +1,6 @@
 # Test-Extension
 
-Testing VSCode publish v0.0.3
+Testing VSCode publish v0.0.6
 
 ## Releasing
 
