@@ -12,7 +12,7 @@ jobs:
   release:
     name: create release
     if: |
-      !startsWith(github.head_ref , 'release v') && github.event.pull_request.merged == true
+      !startsWith(github.ref_name , 'release v') && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
