@@ -11,7 +11,7 @@ on:
 jobs:
   release:
     name: create release
-    if: github.event.pull_request.merged == true && ${{ !startsWith(GITHUB_REF_NAME , 'release v') }}
+    if: github.event.pull_request.merged == true && ${{ !startsWith(github.head_ref , 'release v') }}
     runs-on: ubuntu-latest
 
     steps:
