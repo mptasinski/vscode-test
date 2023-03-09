@@ -16,6 +16,9 @@ jobs:
     steps:
       - name: debug
         run: |
+          echo ${{ github.ref_name }} 
+          echo ${{ github.head_ref }} 
+          echo ${{ github.event.pull_request.merged }} 
           echo ${{ startsWith(github.head_ref , 'release v') }}
           echo ${{ (github.event.pull_request.merged == true) }}
       # - uses: actions/checkout@v2
