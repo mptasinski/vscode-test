@@ -26,20 +26,40 @@ jobs:
       - name: prepare
         run: npm run vscode:prepublish
       
+      - name: metadata
+        id: metadata
+        run: |
+          Version=$(node -p "require('./package.json').version")
+          echo "Version=$Version" >> $GITHUB_OUTPUT
+          
+          ReleaseName="Release v$Version"
+          echo "ReleaseName=$ReleaseName" >> $GITHUB_OUTPUT
+
+          ReleaseTag="v$Version"
+          echo "ReleaseTag=$ReleaseTag" >> $GITHUB_OUTPUT
+
+          Package=${{ github.event.repository.name }}-$Version.vsix
+          echo "Package=$Package" >> $GITHUB_OUTPUT
+
       - name: package extension
         id: package
-        run: |
-          NAME=${{ github.event.repository.name }}-$(node -p "require('./package.json').version").vsix
-          echo "NAME=$NAME" >> $GITHUB_OUTPUT
-          npx --yes vsce package -o "./$NAME.vsix"
+        run: npx --yes vsce package -o "./${{ steps.metadata.outputs.Package }}"
+
+      - uses: rickstaa/action-create-tag@v1
+        id: tag
+        with:
+          tag: ${{ steps.metadata.outputs.ReleaseTag }}
+          tag_exists_error: false
+          message: "Latest release"
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
+          tag: ${{ steps.metadata.outputs.ReleaseTag }}
           body_path: ${{ github.workspace }}/CHANGELOG.txt
-          name: ${{ github.head_ref }}
+          name: ${{ steps.metadata.outputs.ReleaseName }}
           token: ${{ secrets.PAT }}
-          files: ${{ steps.package.outputs.NAME }}
+          files: ${{ steps.metadata.outputs.Package }}
       
       - name: Publish to Visual Studio Marketplace
         run: npx --yes vsce publish -i "./${{ steps.package.outputs.NAME }}" -p "${{ secrets.VS_MARKETPLACE_TOKEN }}"
