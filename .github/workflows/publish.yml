@@ -15,35 +15,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: debug
-        run: |
-          echo ${{ github.ref_name }} 
-          echo ${{ github.head_ref }} 
-          echo ${{ github.event.pull_request.merged }} 
-          echo ${{ startsWith(github.head_ref , 'release v') }}
-          echo ${{ (github.event.pull_request.merged == true) }}
-
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 18
-      - run: npm ci
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: install
+        run: npm ci
+      
+      - name: prepare
+        run: npm run vscode:prepublish
+      
+      - name: package extension
+        id: package
+        run: |
+          NAME=${{ github.event.repository.name }}-$(node -p "require('./package.json').version").vsix
+          echo "NAME=$NAME" >> $GITHUB_OUTPUT
+          npx --yes vsce package -o "./$NAME.vsix"
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.head_ref }}
-          release_name: ${{ github.head_ref }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
-          draft: false
-          prerelease: false
+          body_path: ${{ github.workspace }}/CHANGELOG.txt
+          name: ${{ github.head_ref }}
+          token: ${{ secrets.PAT }}
+          files: ${{ steps.package.outputs.NAME }}
       
       - name: Publish to Visual Studio Marketplace
-        uses: HaaLeo/publish-vscode-extension@v1
-        with:
-          pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
-          registryUrl: https://marketplace.visualstudio.com
+        run: npx --yes vsce publish -i "./${{ steps.package.outputs.NAME }}" -p "${{ secrets.VS_MARKETPLACE_TOKEN }}"
+
