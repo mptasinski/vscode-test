@@ -22,10 +22,7 @@ jobs:
 
       - name: install
         run: npm ci
-      
-      - name: prepare
-        run: npm run vscode:prepublish
-      
+
       - name: metadata
         id: metadata
         run: |
@@ -45,26 +42,19 @@ jobs:
         id: package
         run: npx --yes vsce package -o "./${{ steps.metadata.outputs.Package }}"
 
-      - uses: rickstaa/action-create-tag@v1
-        id: tag
-        with:
-          github_token: ${{ secrets.PAT }}
-          tag: ${{ steps.metadata.outputs.ReleaseTag }}
-          tag_exists_error: false
-          message: "Latest release"
-
-      - name: generate ReleaseLog
-        run: npx --yes conventional-changelog-cli -i CHANGELOG.md -o ReleaseLog.txt
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag: ${{ steps.metadata.outputs.ReleaseTag }}
-          body_path: ${{ github.workspace }}/ReleaseLog.txt
-          name: ${{ steps.metadata.outputs.ReleaseName }}
-          token: ${{ secrets.PAT }}
-          files: ${{ steps.metadata.outputs.Package }}
-      
       - name: Publish to Visual Studio Marketplace
         run: npx --yes vsce publish -i "./${{ steps.package.outputs.NAME }}" -p "${{ secrets.VS_MARKETPLACE_TOKEN }}"
 
+      - name: Tag commit
+        uses: tvdias/github-tagger@v0.0.1
+        with:
+          repo-token: ${{ secrets.PAT }}
+          tag: ${{ steps.metadata.outputs.ReleaseTag }}
+
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: ${{ steps.metadata.outputs.Package }}
+          makeLatest: true
+          token: ${{ secrets.PAT }}
+          name: ${{ steps.metadata.outputs.ReleaseName }}
+          tag: ${{ steps.metadata.outputs.ReleaseTag }}
