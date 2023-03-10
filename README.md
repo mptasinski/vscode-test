@@ -1,4 +1,4 @@
-# Test-Extension
+# Test-extension
 
 Testing VSCode publish v0.0.1
 
