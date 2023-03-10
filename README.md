@@ -1,8 +1,8 @@
 # Test-Extension
 
-Testing VSCode publish v0.0.6
+Testing VSCode publish v0.0.0
 
-## Releasinggggg
+## Releasing
 
 1. create branch from master with your changes
 1. validate and then merge changes to master
