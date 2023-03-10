@@ -1,9 +1,6 @@
-# Change Log
+## <small>0.0.3 (2023-03-10)</small>
 
-All notable changes to the "test-extension" extension will be documented in this file.
+* Update README.md (#19) ([5f32a18](https://github.com/mptasinski/vscode-test/commit/5f32a18)), closes [#19](https://github.com/mptasinski/vscode-test/issues/19)
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [Unreleased]
 
-- Initial release
