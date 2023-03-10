@@ -43,7 +43,7 @@ jobs:
         run: npx --yes vsce package -o "./${{ steps.metadata.outputs.Package }}"
 
       - name: Publish to Visual Studio Marketplace
-        run: npx --yes vsce publish -i "./${{ steps.package.outputs.NAME }}" -p "${{ secrets.VS_MARKETPLACE_TOKEN }}"
+        run: npx --yes vsce publish -i "./${{ steps.metadata.outputs.Package }}" -p "${{ secrets.VS_MARKETPLACE_TOKEN }}"
 
       - name: Tag commit
         uses: tvdias/github-tagger@v0.0.1
