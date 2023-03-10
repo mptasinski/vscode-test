@@ -1,6 +1,6 @@
-## <small>0.0.4 (2023-03-10)</small>
+## <small>0.0.5 (2023-03-10)</small>
 
-* Update package.json (#21) ([ef477d7](https://github.com/mptasinski/vscode-test/commit/ef477d7)), closes [#21](https://github.com/mptasinski/vscode-test/issues/21)
+* Update README.md (#23) ([4e29c1e](https://github.com/mptasinski/vscode-test/commit/4e29c1e)), closes [#23](https://github.com/mptasinski/vscode-test/issues/23)
 
 
 
