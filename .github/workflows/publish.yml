@@ -48,7 +48,7 @@ jobs:
       - uses: rickstaa/action-create-tag@v1
         id: tag
         with:
-          token: ${{ secrets.PAT }}
+          github_token: ${{ secrets.PAT }}
           tag: ${{ steps.metadata.outputs.ReleaseTag }}
           tag_exists_error: false
           message: "Latest release"
