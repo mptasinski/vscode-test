@@ -30,7 +30,7 @@ jobs:
           echo "VERSION=$(npm version patch --no-git-tag-version)" >> $GITHUB_OUTPUT
 
       - name: Update Changelog
-        run: npx --yes conventional-changelog -i CHANGELOG.md -s -r 0
+        run: npx --yes conventional-changelog-cli -i CHANGELOG.md -s -r 0
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
