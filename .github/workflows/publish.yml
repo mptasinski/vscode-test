@@ -48,15 +48,19 @@ jobs:
       - uses: rickstaa/action-create-tag@v1
         id: tag
         with:
+          token: ${{ secrets.PAT }}
           tag: ${{ steps.metadata.outputs.ReleaseTag }}
           tag_exists_error: false
           message: "Latest release"
+
+      - name: generate ReleaseLog
+        run: npx --yes conventional-changelog-cli -i CHANGELOG.md -o ReleaseLog.txt
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           tag: ${{ steps.metadata.outputs.ReleaseTag }}
-          body_path: ${{ github.workspace }}/CHANGELOG.txt
+          body_path: ${{ github.workspace }}/ReleaseLog.txt
           name: ${{ steps.metadata.outputs.ReleaseName }}
           token: ${{ secrets.PAT }}
           files: ${{ steps.metadata.outputs.Package }}
