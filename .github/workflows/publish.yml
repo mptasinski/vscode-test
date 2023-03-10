@@ -22,14 +22,28 @@ jobs:
           echo ${{ github.event.pull_request.merged }} 
           echo ${{ startsWith(github.head_ref , 'release v') }}
           echo ${{ (github.event.pull_request.merged == true) }}
-      # - uses: actions/checkout@v2
-      # - uses: actions/setup-node@v1
-      #   with:
-      #     node-version: 18
-      # - run: npm ci
+
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 18
+      - run: npm ci
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false
       
-      # - name: Publish to Visual Studio Marketplace
-      #   uses: HaaLeo/publish-vscode-extension@v1
-      #   with:
-      #     pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
-      #     registryUrl: https://marketplace.visualstudio.com
+      - name: Publish to Visual Studio Marketplace
+        uses: HaaLeo/publish-vscode-extension@v1
+        with:
+          pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+          registryUrl: https://marketplace.visualstudio.com
