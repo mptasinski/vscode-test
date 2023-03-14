@@ -1,6 +1,6 @@
-## <small>0.0.6 (2023-03-10)</small>
+## <small>0.0.7 (2023-03-14)</small>
 
-* Update README.md (#25) ([7442440](https://github.com/mptasinski/vscode-test/commit/7442440)), closes [#25](https://github.com/mptasinski/vscode-test/issues/25)
+* pat i kod (#30) ([d3a5416](https://github.com/mptasinski/vscode-test/commit/d3a5416)), closes [#30](https://github.com/mptasinski/vscode-test/issues/30)
 
 
 
