@@ -8,6 +8,9 @@ on:
     branches:
       - master
 
+permissions:
+  contents: write
+
 jobs:
   deploy:
     name: publish package
@@ -48,13 +51,13 @@ jobs:
       - name: Tag commit
         uses: tvdias/github-tagger@v0.0.1
         with:
-          repo-token: ${{ secrets.PAT }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.metadata.outputs.ReleaseTag }}
 
       - uses: ncipollo/release-action@v1
         with:
           artifacts: ${{ steps.metadata.outputs.Package }}
           makeLatest: true
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           name: ${{ steps.metadata.outputs.ReleaseName }}
           tag: ${{ steps.metadata.outputs.ReleaseTag }}
