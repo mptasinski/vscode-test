@@ -1,6 +1,6 @@
-## <small>0.0.7 (2023-03-14)</small>
+## <small>0.0.8 (2023-03-14)</small>
 
-* pat i kod (#30) ([d3a5416](https://github.com/mptasinski/vscode-test/commit/d3a5416)), closes [#30](https://github.com/mptasinski/vscode-test/issues/30)
+* Release v0.0.69 (#32) ([45eb099](https://github.com/mptasinski/vscode-test/commit/45eb099)), closes [#32](https://github.com/mptasinski/vscode-test/issues/32)
 
 
 
