@@ -29,20 +29,26 @@ jobs:
           cache: 'npm'
 
       - name: update version
-        id: release
+        id: version
         run: |
           echo "VERSION=$(npm version patch --no-git-tag-version)" >> $GITHUB_OUTPUT
-          echo "RELEASELOG=$(npx -y auto-changelog --stdout --release-summary -p --unreleased-only --hide-credit)" >> $GITHUB_OUTPUT
 
       - name: Update Changelog
         run: npx --yes auto-changelog -p
+
+      - name: release log
+        run: |
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "RELEASELOG<<$EOF" >> $GITHUB_ENV
+          npx -y auto-changelog --stdout --release-summary -p --unreleased-only --hide-credit >> $GITHUB_ENV
+          echo "$EOF" >> $GITHUB_ENV
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Release ${{ steps.release.outputs.VERSION }}"
-          title: "Release ${{ steps.release.outputs.VERSION }}"
+          commit-message: "Release ${{ steps.version.outputs.VERSION }}"
+          title: "Release ${{ steps.version.outputs.VERSION }}"
           labels: "release"
-          body: ${{ steps.release.outputs.RELEASELOG }}
-          branch: "release-${{ steps.release.outputs.VERSION }}"
+          body: ${{ env.RELEASELOG }}
+          branch: "release-${{ steps.version.outputs.VERSION }}"
