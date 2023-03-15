@@ -31,7 +31,7 @@ jobs:
         run: |
           Version=$(node -p "require('./package.json').version")
           echo "Version=$Version" >> $GITHUB_OUTPUT
-          
+
           ReleaseName="Release v$Version"
           echo "ReleaseName=$ReleaseName" >> $GITHUB_OUTPUT
 
@@ -41,13 +41,18 @@ jobs:
           Package=${{ github.event.repository.name }}-$Version.vsix
           echo "Package=$Package" >> $GITHUB_OUTPUT
 
+      - uses: cschleiden/replace-tokens@v1
+        with:
+          files: 'package.json'
+        env:
+          PUBLISHER_ID: ${{ vars.PUBLISHER_ID }}
+
       - name: package extension
         id: package
         run: npx --yes vsce package -o "./${{ steps.metadata.outputs.Package }}"
 
       - name: Publish to Visual Studio Marketplace
-        run: echo "publish complete"
-        # run: npx --yes vsce publish -i "./${{ steps.metadata.outputs.Package }}" -p "${{ secrets.VS_MARKETPLACE_TOKEN }}"
+        run: npx --yes vsce publish -i "./${{ steps.metadata.outputs.Package }}" -p "${{ secrets.VS_MARKETPLACE_TOKEN }}"
 
       - name: Tag commit
         uses: tvdias/github-tagger@v0.0.1
@@ -55,10 +60,18 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.metadata.outputs.ReleaseTag }}
 
-      - uses: ncipollo/release-action@v1
+      - name: create release
+        uses: ncipollo/release-action@v1
         with:
           artifacts: ${{ steps.metadata.outputs.Package }}
           makeLatest: true
           token: ${{ secrets.GITHUB_TOKEN }}
           name: ${{ steps.metadata.outputs.ReleaseName }}
           tag: ${{ steps.metadata.outputs.ReleaseTag }}
+
+      - name: revert release [${{github.event.number}}]
+        uses: k1LoW/pr-revert-action@v0
+        if: ${{ failure() }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_REVERT_NUMBER: ${{github.event.number}}

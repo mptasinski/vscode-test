@@ -28,19 +28,21 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
-      - name: bump version
-        id: version
+      - name: update version
+        id: release
         run: |
           echo "VERSION=$(npm version patch --no-git-tag-version)" >> $GITHUB_OUTPUT
+          echo "RELEASELOG=$(npx -y auto-changelog --stdout --release-summary -p --unreleased-only --hide-credit)" >> $GITHUB_OUTPUT
 
       - name: Update Changelog
-        run: npx --yes conventional-changelog-cli -i CHANGELOG.md -s -r 0
+        run: npx --yes auto-changelog -p
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Release ${{ steps.version.outputs.VERSION }}"
-          title: "Release ${{ steps.version.outputs.VERSION }}"
+          commit-message: "Release ${{ steps.release.outputs.VERSION }}"
+          title: "Release ${{ steps.release.outputs.VERSION }}"
           labels: "release"
-          branch: "release-${{ steps.version.outputs.VERSION }}"
+          body: ${{ steps.release.outputs.RELEASELOG }}
+          branch: "release-${{ steps.release.outputs.VERSION }}"
