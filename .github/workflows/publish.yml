@@ -68,4 +68,5 @@ jobs:
         uses: k1LoW/pr-revert-action@v0
         if: ${{ failure() }}
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_REVERT_NUMBER: ${{github.event.number}}
