@@ -64,7 +64,8 @@ jobs:
           name: ${{ steps.metadata.outputs.ReleaseName }}
           tag: ${{ steps.metadata.outputs.ReleaseTag }}
 
-      - uses: k1LoW/pr-revert-action@v0
+      - name: revert release [${{ github.event.issue.number }}]
+        uses: k1LoW/pr-revert-action@v0
         if: ${{ failure() }}
         env:
           PR_REVERT_NUMBER: ${{ github.event.issue.number }}
