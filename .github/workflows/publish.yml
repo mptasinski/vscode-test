@@ -14,7 +14,7 @@ permissions:
 jobs:
   deploy:
     name: publish package
-    if: ${{ startsWith(github.head_ref , 'release-v') && github.event.pull_request.merged == true }}
+    # if: ${{ startsWith(github.head_ref , 'release-v') && github.event.pull_request.merged == true }}
     runs-on: ubuntu-latest
 
     steps:
