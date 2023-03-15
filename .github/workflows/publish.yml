@@ -3,10 +3,10 @@ name: Publish
 # trigger after merge branch "release vx.x.x" into master
 on:
   pull_request:
-    # types:
-    #   - closed
-    # branches:
-    #   - master
+    types:
+      - closed
+    branches:
+      - master
 
 permissions:
   contents: write
@@ -14,7 +14,7 @@ permissions:
 jobs:
   deploy:
     name: publish package
-    # if: ${{ startsWith(github.head_ref , 'release-v') && github.event.pull_request.merged == true }}
+    if: ${{ startsWith(github.head_ref , 'release-v') && github.event.pull_request.merged == true }}
     runs-on: ubuntu-latest
 
     steps:
@@ -31,7 +31,7 @@ jobs:
         run: |
           Version=$(node -p "require('./package.json').version")
           echo "Version=$Version" >> $GITHUB_OUTPUT
-          
+
           ReleaseName="Release v$Version"
           echo "ReleaseName=$ReleaseName" >> $GITHUB_OUTPUT
 
@@ -41,12 +41,17 @@ jobs:
           Package=${{ github.event.repository.name }}-$Version.vsix
           echo "Package=$Package" >> $GITHUB_OUTPUT
 
+      - uses: cschleiden/replace-tokens@v1
+        with:
+          files: 'package.json'
+        env:
+          PUBLISHER_ID: ${{ vars.PUBLISHER_ID }}
+
       - name: package extension
         id: package
         run: npx --yes vsce package -o "./${{ steps.metadata.outputs.Package }}"
 
       - name: Publish to Visual Studio Marketplace
-        # run: echo "publish complete"
         run: npx --yes vsce publish -i "./${{ steps.metadata.outputs.Package }}" -p "${{ secrets.VS_MARKETPLACE_TOKEN }}"
 
       - name: Tag commit
