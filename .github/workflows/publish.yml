@@ -3,10 +3,10 @@ name: Publish
 # trigger after merge branch "release vx.x.x" into master
 on:
   pull_request:
-    types:
-      - closed
-    branches:
-      - master
+    # types:
+    #   - closed
+    # branches:
+    #   - master
 
 permissions:
   contents: write
@@ -46,8 +46,8 @@ jobs:
         run: npx --yes vsce package -o "./${{ steps.metadata.outputs.Package }}"
 
       - name: Publish to Visual Studio Marketplace
-        run: echo "publish complete"
-        # run: npx --yes vsce publish -i "./${{ steps.metadata.outputs.Package }}" -p "${{ secrets.VS_MARKETPLACE_TOKEN }}"
+        # run: echo "publish complete"
+        run: npx --yes vsce publish -i "./${{ steps.metadata.outputs.Package }}" -p "${{ secrets.VS_MARKETPLACE_TOKEN }}"
 
       - name: Tag commit
         uses: tvdias/github-tagger@v0.0.1
@@ -55,10 +55,16 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.metadata.outputs.ReleaseTag }}
 
-      - uses: ncipollo/release-action@v1
+      - name: create release
+        uses: ncipollo/release-action@v1
         with:
           artifacts: ${{ steps.metadata.outputs.Package }}
           makeLatest: true
           token: ${{ secrets.GITHUB_TOKEN }}
           name: ${{ steps.metadata.outputs.ReleaseName }}
           tag: ${{ steps.metadata.outputs.ReleaseTag }}
+
+      - uses: k1LoW/pr-revert-action@v0
+        if: ${{ failure() }}
+        env:
+          PR_REVERT_NUMBER: ${{ github.event.issue.number }}
